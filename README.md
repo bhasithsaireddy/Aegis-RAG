@@ -1,3 +1,12 @@
+---
+title: Aegis RAG
+emoji: 🌌
+colorFrom: blue
+colorTo: indigo
+sdk: docker
+pinned: false
+short_description: Offline Multimodal RAG System
+---
 <p align="center">
   <h1 align="center">🌌 Aegis RAG</h1>
   <p align="center"><strong>Offline Multimodal RAG System</strong></p>
