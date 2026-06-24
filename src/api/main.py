@@ -32,9 +32,9 @@ app.include_router(settings.router, prefix="/api", tags=["Settings"])
 app.include_router(diarization.router, prefix="/api/voice", tags=["Speaker Diarization"])
 
 
-@app.get("/")
+@app.get("/api/status")
 async def root():
-    """Root endpoint"""
+    """Root status endpoint"""
     return {
         "name": "Aegis RAG",
         "version": "1.0.0",
