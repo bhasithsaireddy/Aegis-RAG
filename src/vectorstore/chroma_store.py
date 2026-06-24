@@ -40,10 +40,13 @@ class ChromaStore:
         self.persist_directory.mkdir(parents=True, exist_ok=True)
 
         # Persistent Chroma client
-        self._client = chromadb.PersistentClient(
-            path=str(self.persist_directory),
-            settings=Settings(anonymized_telemetry=False)
-        )
+        if config.DEPLOYMENT_MODE == "cloud":
+            self._client = chromadb.EphemeralClient(settings=Settings(anonymized_telemetry=False))
+        else:
+            self._client = chromadb.PersistentClient(
+                path=str(self.persist_directory),
+                settings=Settings(anonymized_telemetry=False)
+            )
 
         # Prefer the new collection name, but keep the legacy one readable.
         try:

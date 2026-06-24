@@ -12,8 +12,8 @@ from ..models import (
     SearchResult,
     Source
 )
-from ...dependencies import get_retriever, get_store
-from ...generation import LLM, Guardrails, CitationEngine
+from ...dependencies import get_retriever, get_store, get_llm
+from ...generation import Guardrails, CitationEngine
 from ...config import config
 
 from ...chat_history.db import ChatDB
@@ -21,7 +21,7 @@ from ...chat_history.db import ChatDB
 router = APIRouter()
 
 # Shared singletons
-llm = LLM()
+llm = get_llm()
 guardrails = Guardrails()
 citations = CitationEngine()
 chat_db = ChatDB()
@@ -262,7 +262,7 @@ async def check_models():
     """Check if required Ollama models are available (LLM + Vision)."""
     return {
         "llm": {
-            "model": llm.model,
+            "model": getattr(llm, "model", "unknown"),
             "available": llm.is_available()
         },
         "vision": {

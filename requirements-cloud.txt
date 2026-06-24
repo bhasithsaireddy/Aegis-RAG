@@ -1,0 +1,14 @@
+# Cloud-optimized requirements for HF Spaces (Free Tier)
+# Excludes heavy dependencies like paddleocr, paddlepaddle, faster-whisper
+
+fastapi>=0.109.0
+uvicorn>=0.27.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+python-multipart>=0.0.9
+chromadb>=0.4.22
+sentence-transformers>=2.3.1
+PyMuPDF>=1.23.8
+python-docx>=1.1.0
+huggingface-hub>=0.20.3
+python-dotenv>=1.0.0

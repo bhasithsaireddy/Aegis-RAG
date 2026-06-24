@@ -1,0 +1,14 @@
+node_modules/
+renderer/node_modules/
+venv/
+__pycache__/
+*.pyc
+.env
+data/
+models/
+out/
+dist/
+.git/
+.vscode/
+.idea/
+.DS_Store

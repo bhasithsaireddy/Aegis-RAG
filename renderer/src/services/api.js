@@ -3,11 +3,10 @@
  * Handles all communication with the Python FastAPI backend
  */
 
-const DEFAULT_BASE_URL = import.meta.env?.VITE_API_BASE_URL || 'http://127.0.0.1:8000'
-
 class ApiClient {
-    constructor(baseUrl = DEFAULT_BASE_URL) {
-        this.baseUrl = baseUrl
+    constructor() {
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        this.baseUrl = import.meta.env?.VITE_API_BASE_URL || (isLocalhost ? 'http://127.0.0.1:8000' : window.location.origin);
     }
 
     /**
