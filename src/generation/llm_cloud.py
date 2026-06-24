@@ -1,9 +1,8 @@
 from typing import List, Generator
 from huggingface_hub import InferenceClient
-from .llm import BaseLLM
 from ..config import config
 
-class HFInferenceLLM(BaseLLM):
+class HFInferenceLLM:
     """
     LLM implementation using Hugging Face Inference API.
     Used for cloud deployments where Ollama is not available.
