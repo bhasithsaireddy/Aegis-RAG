@@ -1,0 +1,59 @@
+{
+  "name": "aegis-rag",
+  "version": "1.0.0",
+  "description": "Offline Multimodal RAG System",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:renderer\" \"wait-on http://localhost:5173 && npm run dev:electron\"",
+    "dev:renderer": "cd renderer && npm run dev",
+    "dev:electron": "electron .",
+    "build": "npm run build:renderer && npm run build:electron",
+    "build:renderer": "cd renderer && npm run build",
+    "build:electron": "electron-builder",
+    "start": "electron ."
+  },
+  "keywords": [
+    "rag",
+    "llm",
+    "offline",
+    "electron",
+    "ai"
+  ],
+  "author": "HXMAN76",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "electron": "^28.1.0",
+    "electron-builder": "^24.9.0",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.aegisrag.app",
+    "productName": "Aegis RAG",
+    "directories": {
+      "output": "out"
+    },
+    "files": [
+      "electron/**/*",
+      "renderer/dist/**/*",
+      "src/**/*",
+      "package.json"
+    ],
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ]
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ]
+    }
+  }
+}

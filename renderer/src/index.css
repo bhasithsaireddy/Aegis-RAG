@@ -1,0 +1,416 @@
+/* ============================================
+   Gantari Font Family (Local)
+   ============================================ */
+@font-face {
+    font-family: 'Gantari';
+    src: url('/fonts/Gantari-Regular.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Gantari';
+    src: url('/fonts/Gantari-Medium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Gantari';
+    src: url('/fonts/Gantari-SemiBold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Gantari';
+    src: url('/fonts/Gantari-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+/* ============================================
+   CSS Custom Properties
+   ============================================ */
+:root {
+    --aegis-rag-bg-app: 10 10 10;
+    --aegis-rag-bg-panel: 14 14 14;
+    --aegis-rag-bg-card: 24 24 24;
+    --aegis-rag-bg-elevated: 30 30 30;
+    --aegis-rag-bg-hover: 37 37 37;
+    --aegis-rag-text-primary: 244 244 244;
+    --aegis-rag-text-secondary: 190 190 190;
+    --aegis-rag-text-muted: 120 120 120;
+    --aegis-rag-accent: 244 244 244;
+    --aegis-rag-accent-light: 255 255 255;
+    --aegis-rag-accent-dark: 172 172 172;
+    --aegis-rag-success: 220 220 220;
+    --aegis-rag-warning: 170 170 170;
+    --aegis-rag-error: 130 130 130;
+    --aegis-rag-border: 255 255 255;
+}
+
+[data-theme='light'] {
+    --aegis-rag-bg-app: 247 247 247;
+    --aegis-rag-bg-panel: 239 239 239;
+    --aegis-rag-bg-card: 255 255 255;
+    --aegis-rag-bg-elevated: 244 244 244;
+    --aegis-rag-bg-hover: 232 232 232;
+    --aegis-rag-text-primary: 18 18 18;
+    --aegis-rag-text-secondary: 72 72 72;
+    --aegis-rag-text-muted: 111 111 111;
+    --aegis-rag-accent: 18 18 18;
+    --aegis-rag-accent-light: 48 48 48;
+    --aegis-rag-accent-dark: 0 0 0;
+    --aegis-rag-success: 55 55 55;
+    --aegis-rag-warning: 90 90 90;
+    --aegis-rag-error: 125 125 125;
+    --aegis-rag-border: 24 24 24;
+}
+
+/* ============================================
+   Tailwind Imports
+   ============================================ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================
+   Base Reset & Global Styles
+   ============================================ */
+@layer base {
+
+    *,
+    *::before,
+    *::after {
+        box-sizing: border-box;
+    }
+
+    html {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        transition: color 240ms ease, background-color 240ms ease, border-color 240ms ease;
+    }
+
+    body {
+        @apply m-0 p-0 bg-aegis-rag-bg-app text-aegis-rag-text-primary font-sans;
+        overflow: hidden;
+        background-image:
+            radial-gradient(circle at top, rgba(255, 255, 255, 0.05), transparent 35%),
+            linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 30%);
+            transition: background-color 240ms ease, color 240ms ease;
+    }
+
+    /* Selection styling */
+    ::selection {
+        @apply bg-aegis-rag-accent/30 text-aegis-rag-text-primary;
+    }
+
+    /* Focus outline */
+    :focus-visible {
+        @apply outline-2 outline-offset-2 outline-aegis-rag-accent;
+    }
+}
+
+/* ============================================
+   Custom Scrollbars - Thin & Dark
+   ============================================ */
+@layer utilities {
+    .scrollbar-thin {
+        scrollbar-width: thin;
+        scrollbar-color: rgba(255, 255, 255, 0.18) transparent;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.18);
+        border-radius: 3px;
+    }
+
+    .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+        background: rgba(255, 255, 255, 0.28);
+    }
+
+    /* Transition utilities */
+    .transition-fast {
+        transition: all 180ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .transition-normal {
+        transition: all 260ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .transition-slow {
+        transition: all 400ms cubic-bezier(0.4, 0, 0.2, 1);
+    }
+}
+
+/* ============================================
+   Glassmorphism Effects
+   ============================================ */
+@layer utilities {
+    .glass {
+        @apply bg-white/5 backdrop-blur-md border border-white/10;
+    }
+
+    .glass-subtle {
+        @apply bg-white/[0.02] backdrop-blur-sm border border-white/[0.06];
+    }
+
+    .glass-card {
+        background: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0) 100%);
+        @apply border border-aegis-rag-border-DEFAULT rounded-2xl;
+    }
+
+    .glass-active {
+        @apply bg-aegis-rag-accent/10 backdrop-blur-md border-aegis-rag-border-accent;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .transition-fast,
+        .transition-normal,
+        .transition-slow,
+        html,
+        body {
+            transition-duration: 1ms !important;
+            animation-duration: 1ms !important;
+        }
+    }
+}
+
+/* ============================================
+   Navigation Active State
+   ============================================ */
+@layer utilities {
+    .nav-active {
+        @apply relative bg-aegis-rag-bg-elevated;
+    }
+
+    .nav-active::before {
+        content: '';
+        @apply absolute left-0 top-1/2 -translate-y-1/2;
+        width: 3px;
+        height: 24px;
+        background: rgb(var(--aegis-rag-text-secondary));
+        border-radius: 0 4px 4px 0;
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.08);
+    }
+}
+
+/* ============================================
+   Component Styles
+   ============================================ */
+@layer components {
+
+    /* Panel base */
+    .panel {
+        @apply bg-aegis-rag-bg-panel border-r border-aegis-rag-border;
+    }
+
+    /* Card base */
+    .card {
+        @apply bg-aegis-rag-bg-card border border-aegis-rag-border rounded-2xl;
+    }
+
+    .card-elevated {
+        @apply bg-aegis-rag-bg-elevated border border-aegis-rag-border-light rounded-2xl;
+    }
+
+    /* Interactive element base */
+    .interactive {
+        @apply transition-fast cursor-pointer;
+    }
+
+    .interactive:hover {
+        @apply bg-aegis-rag-bg-hover;
+    }
+
+    /* Button variants */
+    .btn-primary {
+        @apply px-5 py-2.5 bg-aegis-rag-bg-elevated text-aegis-rag-text-primary rounded-full font-semibold;
+        @apply hover:bg-aegis-rag-bg-hover active:bg-aegis-rag-bg-card;
+        @apply transition-fast disabled:opacity-50 disabled:cursor-not-allowed;
+        @apply border border-aegis-rag-border shadow-lg shadow-black/20;
+    }
+
+    .btn-secondary {
+        @apply px-5 py-2.5 bg-aegis-rag-bg-elevated text-aegis-rag-text-secondary rounded-full;
+        @apply hover:bg-aegis-rag-bg-hover hover:text-aegis-rag-text-primary;
+        @apply border border-aegis-rag-border;
+        @apply transition-fast disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-ghost {
+        @apply px-4 py-2 text-aegis-rag-text-secondary rounded-xl;
+        @apply hover:bg-aegis-rag-bg-elevated hover:text-aegis-rag-text-primary;
+        @apply transition-fast disabled:opacity-50 disabled:cursor-not-allowed;
+    }
+
+    .btn-icon {
+        @apply p-2 text-aegis-rag-text-muted rounded-xl;
+        @apply hover:bg-aegis-rag-bg-elevated hover:text-aegis-rag-text-primary;
+        @apply transition-fast;
+    }
+
+    /* Status indicators */
+    .status-dot {
+        @apply w-2 h-2 rounded-full;
+    }
+
+    .status-dot-connected {
+        @apply bg-aegis-rag-text-secondary;
+        box-shadow: 0 0 8px rgb(var(--aegis-rag-text-secondary) / 0.22);
+    }
+
+    .status-dot-disconnected {
+        @apply bg-aegis-rag-error;
+    }
+
+    .status-dot-checking {
+        @apply bg-aegis-rag-warning animate-pulse-slow;
+    }
+
+    /* Input styles */
+    .input {
+        @apply w-full px-4 py-3 bg-aegis-rag-bg-card border border-aegis-rag-border rounded-2xl;
+        @apply text-base text-aegis-rag-text-primary placeholder:text-aegis-rag-text-muted;
+        @apply outline-none focus:border-aegis-rag-accent/50 transition-fast;
+    }
+
+    .input-lg {
+        @apply w-full px-5 py-4 bg-aegis-rag-bg-card border border-aegis-rag-border rounded-3xl;
+        @apply text-lg text-aegis-rag-text-primary placeholder:text-aegis-rag-text-muted;
+        @apply outline-none focus:border-aegis-rag-accent/50 transition-fast;
+    }
+
+    /* Badge styles */
+    .badge {
+        @apply inline-flex items-center px-2.5 py-1 text-xs font-medium rounded-full;
+    }
+
+    .badge-accent {
+        @apply bg-aegis-rag-bg-elevated text-aegis-rag-text-primary;
+    }
+
+    .badge-success {
+        @apply bg-aegis-rag-success/20 text-aegis-rag-success;
+    }
+
+    .badge-error {
+        @apply bg-aegis-rag-error/20 text-aegis-rag-error;
+    }
+
+    .badge-muted {
+        @apply bg-aegis-rag-bg-elevated text-aegis-rag-text-muted;
+    }
+}
+
+/* ============================================
+   Electron Drag Region
+   ============================================ */
+.drag-region {
+    -webkit-app-region: drag;
+}
+
+.no-drag {
+    -webkit-app-region: no-drag;
+}
+
+/* ============================================
+   Message Bubbles
+   ============================================ */
+.message-user {
+    @apply bg-aegis-rag-bg-elevated text-aegis-rag-text-primary rounded-3xl rounded-br-lg;
+}
+
+.message-ai {
+    @apply bg-aegis-rag-bg-card text-aegis-rag-text-primary rounded-3xl rounded-bl-lg;
+}
+
+/* ============================================
+   Markdown Content Styling
+   ============================================ */
+.markdown-content {
+    @apply text-aegis-rag-text-primary leading-relaxed;
+}
+
+.markdown-content h1,
+.markdown-content h2,
+.markdown-content h3 {
+    @apply font-semibold text-aegis-rag-text-primary mt-4 mb-2;
+}
+
+.markdown-content p {
+    @apply mb-3;
+}
+
+.markdown-content code {
+    @apply px-1.5 py-0.5 bg-aegis-rag-bg-elevated rounded text-sm font-mono text-aegis-rag-accent;
+}
+
+.markdown-content pre {
+    @apply p-4 bg-aegis-rag-bg-elevated rounded-xl overflow-x-auto my-3;
+}
+
+.markdown-content pre code {
+    @apply bg-transparent p-0;
+}
+
+.markdown-content ul,
+.markdown-content ol {
+    @apply pl-5 mb-3 space-y-1;
+}
+
+.markdown-content li {
+    @apply text-aegis-rag-text-secondary;
+}
+
+.markdown-content a {
+    @apply text-aegis-rag-accent hover:text-aegis-rag-accent-light underline;
+}
+
+.markdown-content blockquote {
+    @apply pl-4 border-l-2 border-aegis-rag-accent/50 text-aegis-rag-text-secondary italic my-3;
+}
+
+/* ============================================
+   Drop Zone Styles
+   ============================================ */
+.dropzone {
+    @apply border-2 border-dashed border-aegis-rag-border rounded-3xl;
+    @apply transition-fast;
+}
+
+.dropzone-active {
+    @apply border-aegis-rag-accent bg-aegis-rag-accent/5;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 20% 0%, rgba(255, 255, 255, 0.08), transparent 24%),
+        radial-gradient(circle at 80% 0%, rgba(255, 255, 255, 0.05), transparent 28%);
+    opacity: 0.55;
+}
+
+/* ============================================
+   Animation Helpers
+   ============================================ */
+.animate-in {
+    animation: fadeIn 0.3s ease-out, slideUp 0.3s ease-out;
+}

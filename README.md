@@ -1,8 +1,8 @@
 <p align="center">
-  <h1 align="center">🌌 ORION</h1>
+  <h1 align="center">🌌 Aegis RAG</h1>
   <p align="center"><strong>Offline Multimodal RAG System</strong></p>
   <p align="center">
-    <em>A fully offline Retrieval-Augmented Generation system for PDF, DOCX, Images, and Voice recordings</em>
+    <em>A fully offline Retrieval-Augmented Generation system for PDF, DOCX, CSV, Images, and Voice recordings</em>
   </p>
 </p>
 
@@ -35,7 +35,7 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────┐
-│                           ORION Desktop App                              │
+│                           Aegis RAG Desktop App                              │
 │  ┌─────────────────────────────────────────────────────────────────────┐ │
 │  │                    Electron + React Frontend                        │ │
 │  └─────────────────────────────────────────────────────────────────────┘ │
@@ -93,7 +93,11 @@
 ### 1. Install Ollama
 
 ```bash
+# Linux / macOS
 curl -fsSL https://ollama.ai/install.sh | sh
+
+# Windows — download the installer from:
+# https://ollama.ai/download/windows
 ```
 
 ### 2. Pull Required Models (one-time, works offline after)
@@ -117,8 +121,8 @@ ollama pull llava               # Vision model (~4.7GB)
 
 ```bash
 # Clone the repository
-git clone https://github.com/HXMAN76/ORION.git
-cd ORION
+git clone https://github.com/HXMAN76/Aegis-RAG.git
+cd Aegis-RAG
 
 # Create and activate virtual environment
 python -m venv venv
@@ -146,7 +150,7 @@ npm run dev
 ## 📁 Project Structure
 
 ```
-ORION/
+Aegis RAG/
 ├── src/                        # Python backend
 │   ├── api/                    # FastAPI application
 │   │   ├── main.py             # App entry point
@@ -160,6 +164,7 @@ ORION/
 │   │   ├── base.py             # Base processor & Chunk model
 │   │   ├── pdf_processor.py    # PDF extraction
 │   │   ├── docx_processor.py   # DOCX extraction
+│   │   ├── csv_processor.py    # CSV/TSV extraction
 │   │   ├── image_processor.py  # Image OCR + Vision
 │   │   └── voice_processor.py  # Audio transcription + diarization
 │   ├── chunking/               # Text chunking
@@ -304,6 +309,8 @@ num_speakers: 2  # optional, auto-detected if omitted
 ### Collection Management
 
 ```http
+GET    /api/settings             # Get current runtime config
+PATCH  /api/settings             # Update settings at runtime
 GET    /collections              # List all collections
 POST   /collections/{name}       # Create collection
 DELETE /collections/{name}       # Delete collection
@@ -315,7 +322,7 @@ GET    /stats                    # System statistics
 
 ## 📊 Retrieval Evaluation
 
-ORION includes built-in metrics for evaluating retrieval quality:
+Aegis RAG includes built-in metrics for evaluating retrieval quality:
 
 ```python
 from tests.retrieval_metrics import recall_at_k, reciprocal_rank, average
@@ -338,7 +345,7 @@ mrr = reciprocal_rank(
 
 ## 🎨 Desktop Application
 
-ORION features a professional desktop interface designed for research workflows:
+Aegis RAG features a professional desktop interface designed for research workflows:
 
 - **Three-pane layout**: Knowledge Explorer | Workspace | Source Context
 - **Drag & drop ingestion**: Drop files directly from your file manager
@@ -390,4 +397,7 @@ MIT License — see [LICENSE](./LICENSE) for details.
 
 <p align="center">
   <strong>Built for researchers, lawyers, analysts, and engineers who need private, offline intelligence.</strong>
+</p>
+<p align="center">
+  See <a href="./ARCHITECTURE.md">ARCHITECTURE.md</a> for the full data-flow and design documentation.
 </p>
