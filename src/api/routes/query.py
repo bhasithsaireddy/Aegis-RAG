@@ -81,12 +81,7 @@ async def query_rag(request: QueryRequest):
         collections=request.collections
     )
     
-    if not results:
-        return QueryResponse(
-            answer="I couldn't find any relevant information to answer your question.",
-            sources=[],
-            confidence=0.0
-        )
+
     
     # Create context with source markers
     context, sources = citations.create_context_with_sources(results)
@@ -99,14 +94,11 @@ async def query_rag(request: QueryRequest):
         full_prompt = f"{conv_history}Context:\n{context}\n\nQuestion: {request.query}\n\nAnswer:"
         answer = llm.generate(
             prompt=full_prompt,
-            system="""You are a helpful AI assistant that answers questions based on the provided context.
-
-Rules:
-1. Answer ONLY based on the information in the context below
-2. If the context doesn't contain relevant information, say "I don't have enough information to answer that"
-3. Cite your sources by referencing [Source X] when using information
-4. Be concise and accurate
-5. Do not make up information""",
+            system="""You are a helpful AI assistant.
+If the user is making a casual greeting or conversational remark, you may reply naturally.
+For factual questions, answer ONLY based on the provided Context.
+If the Context doesn't contain relevant information for a factual question, say "I don't have enough information to answer that."
+Cite sources using [Source X] format. Do not make up information.""",
             temperature=0.3
         )
     except Exception as e:
@@ -164,23 +156,7 @@ async def query_rag_stream(request: QueryRequest):
         collections=request.collections
     )
     
-    if not results:
-        async def empty_response():
-            yield json.dumps({
-                "type": "answer",
-                "content": "I couldn't find any relevant information to answer your question."
-            }) + "\n"
-            yield json.dumps({"type": "sources", "sources": []}) + "\n"
-            yield json.dumps({"type": "done"}) + "\n"
-            
-            if request.session_id:
-                chat_db.add_message(
-                    request.session_id,
-                    "assistant",
-                    "I couldn't find any relevant information to answer your question."
-                )
-        
-        return StreamingResponse(empty_response(), media_type="application/x-ndjson")
+
     
     # Create context with source markers
     context, sources = citations.create_context_with_sources(results)
@@ -194,11 +170,11 @@ async def query_rag_stream(request: QueryRequest):
             # Stream the response
             for chunk in llm.generate_stream(
                 prompt=f"{conv_history}Context:\n{context}\n\nQuestion: {request.query}\n\nAnswer:",
-                system="""You are a helpful AI assistant that answers questions based on the provided context.
-Rules:
-1. Answer ONLY based on the information in the context
-2. Cite sources using [Source X] format
-3. Be concise and accurate"""
+                system="""You are a helpful AI assistant.
+If the user is making a casual greeting or conversational remark, you may reply naturally.
+For factual questions, answer ONLY based on the provided Context.
+If the Context doesn't contain relevant information for a factual question, say "I don't have enough information to answer that."
+Cite sources using [Source X] format."""
             ):
                 full_response += chunk
                 yield json.dumps({"type": "chunk", "content": chunk}) + "\n"
