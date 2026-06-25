@@ -94,7 +94,17 @@ class EnhancedVoiceProcessor(BaseProcessor):
         return "cpu"
     
     def _get_whisper(self):
-        """Lazy load Faster-Whisper model."""
+        """Lazy load Faster-Whisper or Groq client."""
+        if config.DEPLOYMENT_MODE == "cloud":
+            if self._whisper is None:
+                from groq import Groq
+                if not config.GROQ_API_KEY:
+                    logger.error("GROQ_API_KEY not set for cloud voice processing")
+                    return None
+                self._whisper = Groq(api_key=config.GROQ_API_KEY)
+                self._whisper_type = "groq"
+            return self._whisper
+            
         if self._whisper is not None:
             return self._whisper
         
@@ -127,15 +137,7 @@ class EnhancedVoiceProcessor(BaseProcessor):
                 return None
         except Exception as e:
             logger.error(f"Failed to load faster-whisper: {e}")
-            # Try openai-whisper as fallback
-            try:
-                import whisper
-                self._whisper = whisper.load_model(self.whisper_model)
-                self._whisper_type = "openai-whisper"
-                logger.info("Fallback to OpenAI Whisper successful")
-                return self._whisper
-            except Exception:
-                return None
+            return None
     
     def process(self, file_path: Path, document_id: Optional[str] = None) -> List[Chunk]:
         """
@@ -294,16 +296,50 @@ class EnhancedVoiceProcessor(BaseProcessor):
         }
     
     def _transcribe(self, audio_path: str, language: str = None) -> List[Dict]:
-        """Transcribe audio with Faster-Whisper or OpenAI Whisper."""
+        """Transcribe audio with Groq, Faster-Whisper, or OpenAI Whisper."""
         whisper = self._get_whisper()
         if whisper is None:
             return []
         
         try:
-            # Check which whisper implementation we're using
             whisper_type = getattr(self, '_whisper_type', None)
             
-            if whisper_type == "faster-whisper":
+            if whisper_type == "groq":
+                logger.info("Transcribing with Groq API...")
+                import json
+                with open(audio_path, "rb") as file:
+                    transcription = whisper.audio.transcriptions.create(
+                        file=file,
+                        model="whisper-large-v3-turbo",
+                        response_format="verbose_json",
+                        timestamp_granularities=["segment"],
+                        language=language
+                    )
+                
+                # Check if transcription is an object or dict
+                if hasattr(transcription, "segments"):
+                    segs = transcription.segments
+                else:
+                    segs = transcription.get("segments", [])
+                
+                result = []
+                for segment in segs:
+                    if isinstance(segment, dict):
+                        result.append({
+                            "start": segment["start"],
+                            "end": segment["end"],
+                            "text": segment["text"].strip()
+                        })
+                    else:
+                        result.append({
+                            "start": segment.start,
+                            "end": segment.end,
+                            "text": segment.text.strip()
+                        })
+                logger.info(f"Groq transcription complete: {len(result)} segments")
+                return result
+                
+            elif whisper_type == "faster-whisper":
                 # Faster-Whisper returns (generator, info)
                 segments, info = whisper.transcribe(
                     audio_path,
