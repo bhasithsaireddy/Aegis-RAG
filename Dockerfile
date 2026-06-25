@@ -41,4 +41,4 @@ RUN mkdir -p /app/data/uploads /app/data/chroma_db
 EXPOSE 7860
 
 # Run the FastAPI server
-CMD ["python", "-m", "uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "7860"]
+CMD sh -c "python -m uvicorn src.api.main:app --host 0.0.0.0 --port ${PORT:-7860}"

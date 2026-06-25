@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: aegis-backend
+    env: docker
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: PORT
+        value: '7860'
+      - key: DEPLOYMENT_MODE
+        value: 'cloud'
+      - key: HF_API_TOKEN
+        sync: false
