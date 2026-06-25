@@ -9,5 +9,5 @@ services:
         value: '7860'
       - key: DEPLOYMENT_MODE
         value: 'cloud'
-      - key: HF_API_TOKEN
+      - key: GROQ_API_KEY
         sync: false

@@ -1,61 +1,76 @@
-from typing import List, Generator
-from huggingface_hub import InferenceClient
+from typing import Generator
+from groq import Groq
 from ..config import config
 
-class HFInferenceLLM:
+
+class GroqLLM:
     """
-    LLM implementation using Hugging Face Inference API.
-    Used for cloud deployments where Ollama is not available.
+    LLM implementation using Groq API.
+    Ultra-fast inference for cloud deployments.
     """
+
     def __init__(self, model_name: str = None):
-        self.model = model_name or config.HF_LLM_MODEL
-        self.token = config.HF_API_TOKEN
-        
-        if not self.token:
-            print("WARNING: HF_API_TOKEN is not set. Inference API calls will fail.")
-            
-        self.client = InferenceClient(model=self.model, token=self.token)
+        self.model = model_name or config.GROQ_MODEL
+        self.api_key = config.GROQ_API_KEY
+
+        if not self.api_key:
+            print("WARNING: GROQ_API_KEY is not set. API calls will fail.")
+
+        self.client = Groq(api_key=self.api_key)
 
     def is_available(self) -> bool:
-        """Check if the HF API token is configured and the client is ready."""
-        return bool(self.token)
+        """Check if the Groq API key is configured."""
+        return bool(self.api_key)
 
-    def generate(self, prompt: str, system: str = None, temperature: float = 0.3, max_tokens: int = 1024) -> str:
-        """Generate a complete response using HF Inference API."""
+    def generate(
+        self,
+        prompt: str,
+        system: str = None,
+        temperature: float = 0.3,
+        max_tokens: int = 1024,
+    ) -> str:
+        """Generate a complete response using Groq API."""
         messages = []
         if system:
             messages.append({"role": "system", "content": system})
-        
         messages.append({"role": "user", "content": prompt})
 
         try:
-            response = self.client.chat_completion(
+            response = self.client.chat.completions.create(
+                model=self.model,
                 messages=messages,
                 temperature=temperature,
                 max_tokens=max_tokens,
-                stream=False
+                stream=False,
             )
             return response.choices[0].message.content
         except Exception as e:
-            return f"Error communicating with Hugging Face API: {str(e)}"
+            return f"Error communicating with Groq API: {str(e)}"
 
-    def generate_stream(self, prompt: str, system: str = None, temperature: float = 0.3, max_tokens: int = 1024) -> Generator[str, None, None]:
-        """Generate a streaming response using HF Inference API."""
+    def generate_stream(
+        self,
+        prompt: str,
+        system: str = None,
+        temperature: float = 0.3,
+        max_tokens: int = 1024,
+    ) -> Generator[str, None, None]:
+        """Generate a streaming response using Groq API."""
         messages = []
         if system:
             messages.append({"role": "system", "content": system})
-        
         messages.append({"role": "user", "content": prompt})
 
         try:
-            stream = self.client.chat_completion(
+            stream = self.client.chat.completions.create(
+                model=self.model,
                 messages=messages,
                 temperature=temperature,
                 max_tokens=max_tokens,
-                stream=True
+                stream=True,
             )
             for chunk in stream:
-                if chunk.choices[0].delta.content:
-                    yield chunk.choices[0].delta.content
+                delta = chunk.choices[0].delta
+                if delta.content:
+                    yield delta.content
         except Exception as e:
-            yield f"\n[Error communicating with Hugging Face API: {str(e)}]"
+            yield f"\n[Error communicating with Groq API: {str(e)}]"

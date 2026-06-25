@@ -19,9 +19,9 @@ class Config:
     # Deployment Mode
     DEPLOYMENT_MODE: str = os.getenv("DEPLOYMENT_MODE", "local")
     
-    # HF Inference API
-    HF_API_TOKEN: str = os.getenv("HF_API_TOKEN", "")
-    HF_LLM_MODEL: str = os.getenv("HF_LLM_MODEL", "mistralai/Mistral-7B-Instruct-v0.3")
+    # Groq API
+    GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
+    GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 
     # Paths
     BASE_DIR: Path = field(default_factory=lambda: Path(__file__).parent.parent)

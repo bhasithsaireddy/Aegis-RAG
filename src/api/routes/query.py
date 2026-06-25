@@ -235,7 +235,16 @@ async def semantic_search(request: SearchRequest):
 
 @router.get("/models/status")
 async def check_models():
-    """Check if required Ollama models are available (LLM + Vision)."""
+    """Check model availability (Groq in cloud, Ollama in local)."""
+    if config.DEPLOYMENT_MODE == "cloud":
+        return {
+            "llm": {
+                "model": getattr(llm, "model", "unknown"),
+                "available": llm.is_available()
+            },
+            "vision": {"model": "N/A (cloud)", "available": False},
+            "embedding": {"model": "all-MiniLM-L6-v2", "available": True}
+        }
     return {
         "llm": {
             "model": getattr(llm, "model", "unknown"),
@@ -253,7 +262,7 @@ async def check_models():
 
 
 def _check_model_available(model_name: str) -> bool:
-    """Check if a specific Ollama model is available."""
+    """Check if a specific Ollama model is available (local mode only)."""
     try:
         import ollama
         response = ollama.list()
