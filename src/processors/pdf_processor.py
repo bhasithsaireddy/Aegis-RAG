@@ -60,12 +60,12 @@ class PDFProcessor(BaseProcessor):
         self._ocr = None
     
     def _get_ocr(self):
-        """Lazy load OCR engine (Tesseract for cloud, DeepSeek for local)"""
+        """Lazy load OCR engine (Gemini for cloud, DeepSeek for local)"""
         if self._ocr is None and self.use_ocr:
             try:
                 if config.DEPLOYMENT_MODE == "cloud":
-                    from ..ocr.tesseract_ocr import TesseractOCR
-                    self._ocr = TesseractOCR()
+                    from ..ocr.gemini_ocr import GeminiOCR
+                    self._ocr = GeminiOCR()
                 else:
                     from ..ocr import DeepSeekOCR
                     self._ocr = DeepSeekOCR()

@@ -74,17 +74,17 @@ When a user uploads a file, Aegis automatically detects the file type and routes
 
 | File Type | Processor | Library | What It Extracts |
 |---|---|---|---|
-| `.pdf` | `PDFProcessor` | **PyMuPDF** (`fitz`) | Native text with layout, tables (converted to Markdown), embedded images. For scanned/image-only PDFs, falls back to OCR (DeepSeek local or Tesseract cloud). |
+| `.pdf` | `PDFProcessor` | **PyMuPDF** (`fitz`) | Native text with layout, tables (converted to Markdown), embedded images. For scanned/image-only PDFs, falls back to OCR (DeepSeek local or Gemini API cloud). |
 | `.docx` `.doc` | `DOCXProcessor` | **python-docx** | Section/heading-aware text, tables to Markdown, embedded images via OCR, hyperlinks, and style metadata. |
 | `.csv` `.tsv` | `CSVProcessor` | Python `csv` module | Schema detection (column names + types), row-based chunking with column headers preserved, and a statistics summary chunk. |
-| `.png` `.jpg` `.jpeg` `.webp` `.bmp` `.tiff` `.gif` | `ImageProcessor` | **DeepSeek OCR** (local) / **Tesseract** (cloud) | OCR text extraction, visual scene descriptions, and table/chart detection from images. |
+| `.png` `.jpg` `.jpeg` `.webp` `.bmp` `.tiff` `.gif` | `ImageProcessor` | **DeepSeek OCR** (local) / **Gemini OCR** (cloud) | OCR text extraction, visual scene descriptions, and table/chart detection from images. |
 | `.mp3` `.wav` `.m4a` `.ogg` `.flac` | `EnhancedVoiceProcessor` | **Faster-Whisper** (local) / **Groq Whisper** (cloud) + **Librosa** | Speech-to-text transcription, MFCC-based speaker diarization (identifies who is speaking), timestamped segments, and automatic speaker count detection via silhouette scoring. |
 
 #### OCR Engine: DeepSeek Vision
 
 For scanned documents and images, Aegis automatically adapts based on the environment:
 - **Local Mode**: Uses a **DeepSeek/LLaVA vision model** via Ollama to extract text, tables as Markdown, and visual descriptions.
-- **Cloud Mode**: Uses **Tesseract OCR** (pytesseract) for blazing fast, CPU-friendly text extraction.
+- **Cloud Mode**: Uses the **Gemini 1.5 Flash API** for blazing fast, highly accurate multimodal extraction (text, tables, and scene descriptions).
 - Extracts raw text, tables (as Markdown), and visual descriptions
 - Includes retry logic with exponential backoff for reliability
 - Runs entirely locally — no data ever leaves your machine
@@ -214,7 +214,7 @@ The retrieved context chunks are assembled into a prompt and sent to the LLM for
 | LLM (Cloud) | **Groq API** (`llama-3.1-8b-instant`) |
 | PDF Processing | **PyMuPDF** (`fitz`) |
 | DOCX Processing | **python-docx** |
-| OCR | **DeepSeek/LLaVA** (local) / **Tesseract** (cloud) |
+| OCR | **DeepSeek/LLaVA** (local) / **Gemini 1.5 Flash** (cloud) |
 | Speech-to-Text | **Faster-Whisper** (local) / **Groq Whisper API** (cloud) |
 | Speaker Diarization | **Librosa** + **scikit-learn** (MFCC + Spectral Clustering) |
 | Reranking | **Cross-Encoder** (`ms-marco-MiniLM-L-6-v2`) |
@@ -272,7 +272,7 @@ Aegis/
 │   │   └── citations.py          # Source citation extraction & formatting
 │   ├── ocr/                      # OCR engine
 │   │   ├── deepseek_ocr.py       # DeepSeek vision model OCR via Ollama
-│   │   └── tesseract_ocr.py      # Tesseract OCR for cloud environments
+│   │   └── gemini_ocr.py         # Gemini OCR API for cloud environments
 │   ├── chat_history/             # Chat persistence
 │   │   └── db.py                 # SQLite session & message storage
 │   ├── config.py                 # Central configuration (dataclass)
@@ -324,6 +324,7 @@ Aegis supports a **split deployment** architecture:
 | Variable | Description |
 |---|---|
 | `GROQ_API_KEY` | Groq API key for LLM inference |
+| `GEMINI_API_KEY` | Gemini API key for OCR and image understanding |
 | `DEPLOYMENT_MODE` | Set to `cloud` (configured in `render.yaml`) |
 
 ---

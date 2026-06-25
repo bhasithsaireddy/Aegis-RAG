@@ -22,6 +22,9 @@ class Config:
     # Groq API
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
     GROQ_MODEL: str = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
+    
+    # Gemini API (for Cloud OCR / Vision)
+    GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
 
     # Paths
     BASE_DIR: Path = field(default_factory=lambda: Path(__file__).parent.parent)
