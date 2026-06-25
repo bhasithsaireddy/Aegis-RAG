@@ -22,6 +22,7 @@ class Embedder:
         """
         self.model = model or config.EMBEDDING_MODEL
         self._client = None
+        self._st_model = None
 
     def _get_client(self):
         """
@@ -37,6 +38,16 @@ class Embedder:
                 ) from e
         return self._client
 
+    def _get_st_model(self):
+        """Lazy-load SentenceTransformer model for cloud deployments."""
+        if self._st_model is None:
+            try:
+                from sentence_transformers import SentenceTransformer
+                self._st_model = SentenceTransformer("all-MiniLM-L6-v2")
+            except ImportError as e:
+                raise ImportError("sentence-transformers package not installed.") from e
+        return self._st_model
+
     def embed(self, text: str) -> List[float]:
         """
         Generate embedding for a single text.
@@ -49,6 +60,10 @@ class Embedder:
         """
         if not text or not text.strip():
             raise ValueError("Input text for embedding is empty.")
+
+        if config.DEPLOYMENT_MODE == "cloud":
+            model = self._get_st_model()
+            return model.encode(text[:8000]).tolist()
 
         client = self._get_client()
 
@@ -84,6 +99,15 @@ class Embedder:
         """
         if not texts:
             return []
+
+        if config.DEPLOYMENT_MODE == "cloud":
+            model = self._get_st_model()
+            valid_texts = [t[:8000] if len(t) > 8000 else t for t in texts if t.strip()]
+            if not valid_texts:
+                return []
+            return model.encode(valid_texts, batch_size=batch_size, show_progress_bar=False).tolist()
+
+
 
         client = self._get_client()
         embeddings: List[List[float]] = []
