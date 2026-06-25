@@ -83,11 +83,9 @@ When a user uploads a file, Aegis automatically detects the file type and routes
 #### OCR Engine: DeepSeek Vision
 
 For scanned documents and images, Aegis automatically adapts based on the environment:
-- **Local Mode**: Uses a **DeepSeek/LLaVA vision model** via Ollama to extract text, tables as Markdown, and visual descriptions.
-- **Cloud Mode**: Uses the **Gemini 1.5 Flash API** for blazing fast, highly accurate multimodal extraction (text, tables, and scene descriptions).
-- Extracts raw text, tables (as Markdown), and visual descriptions
-- Includes retry logic with exponential backoff for reliability
-- Runs entirely locally — no data ever leaves your machine
+- **Local Mode**: Uses a **DeepSeek/LLaVA vision model** via Ollama. Runs entirely offline — no data ever leaves your machine.
+- **Cloud Mode**: Uses the **Gemini 1.5 Flash API** for blazing fast, highly accurate multimodal extraction.
+Both modes extract raw text, tables (as Markdown), and generate visual descriptions of charts/scenes.
 
 #### Voice Processing Pipeline
 
