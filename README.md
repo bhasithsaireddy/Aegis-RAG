@@ -2,7 +2,7 @@
 
 Aegis is a production-grade, privacy-first **Retrieval-Augmented Generation (RAG)** system that transforms your unstructured documents — PDFs, Word files, spreadsheets, images, and audio recordings — into a searchable, conversational knowledge base. Ask questions in natural language and receive accurate, source-cited answers grounded entirely in your own data.
 
-Designed to run **fully offline** on local hardware for maximum data privacy, or deploy seamlessly to the **cloud** (Vercel + Render / Hugging Face Spaces) for global accessibility.
+Designed to run **fully offline** on local hardware for maximum data privacy, or deploy seamlessly to the **cloud** (Vercel + Render) for global accessibility.
 
 ---
 
@@ -39,7 +39,7 @@ Designed to run **fully offline** on local hardware for maximum data privacy, or
 │               ┌────────────────┐                                    │
 │               │   LLM Engine   │                                    │
 │               │  Ollama (local)│                                    │
-│               │  HF API (cloud)│                                    │
+│               │  Groq  (cloud) │                                    │
 │               └────────────────┘                                    │
 │                                                                     │
 │  INGESTION PIPELINE                                                 │
@@ -185,7 +185,7 @@ The retrieved context chunks are assembled into a prompt and sent to the LLM for
 | Mode | Model | Provider |
 |---|---|---|
 | **Local** | `mistral:7b` | Ollama (local GPU) |
-| **Cloud** | `Mistral-7B-Instruct-v0.3` | Hugging Face Inference API |
+| **Cloud** | `llama-3.1-8b-instant` | Groq API (ultra-fast cloud inference) |
 
 **Generation pipeline:**
 1. **Context Assembly**: The `CitationEngine` injects `[Source 1]`, `[Source 2]`, etc. markers into the context so the LLM can reference them
@@ -210,7 +210,7 @@ The retrieved context chunks are assembled into a prompt and sent to the LLM for
 | Embedding (Local) | **Ollama** (`nomic-embed-text`) |
 | Embedding (Cloud) | **Sentence-Transformers** (`all-MiniLM-L6-v2`) |
 | LLM (Local) | **Ollama** (`mistral:7b`) |
-| LLM (Cloud) | **Hugging Face Inference API** (`Mistral-7B-Instruct-v0.3`) |
+| LLM (Cloud) | **Groq API** (`llama-3.1-8b-instant`) |
 | PDF Processing | **PyMuPDF** (`fitz`) |
 | DOCX Processing | **python-docx** |
 | OCR | **DeepSeek/LLaVA** vision model via Ollama |
@@ -266,7 +266,7 @@ Aegis/
 │   │   └── mmr.py                # Maximal Marginal Relevance diversity
 │   ├── generation/               # LLM response generation
 │   │   ├── llm.py                # Local Ollama LLM client
-│   │   ├── llm_cloud.py          # HF Inference API LLM client
+│   │   ├── llm_cloud.py          # Groq API LLM client
 │   │   ├── guardrails.py         # Response validation & confidence scoring
 │   │   └── citations.py          # Source citation extraction & formatting
 │   ├── ocr/                      # OCR engine
@@ -321,7 +321,7 @@ Aegis supports a **split deployment** architecture:
 **Render:**
 | Variable | Description |
 |---|---|
-| `HF_API_TOKEN` | Hugging Face API token for LLM inference |
+| `GROQ_API_KEY` | Groq API key for LLM inference |
 | `DEPLOYMENT_MODE` | Set to `cloud` (configured in `render.yaml`) |
 
 ---
@@ -337,8 +337,8 @@ Aegis supports a **split deployment** architecture:
 ### Setup
 ```bash
 # Clone the repository
-git clone https://github.com/YOUR_USERNAME/Aegis.git
-cd Aegis
+git clone https://github.com/bhasithsaireddy/Aegis-RAG.git
+cd Aegis-RAG
 
 # Install Python dependencies
 python -m venv venv
