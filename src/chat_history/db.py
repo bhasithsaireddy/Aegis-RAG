@@ -126,6 +126,14 @@ class ChatDB:
         meta_json = json.dumps(metadata) if metadata else "{}"
         
         with self._get_conn() as conn:
+            # Auto-recover session if it was lost due to ephemeral container restart
+            cursor = conn.execute("SELECT id FROM sessions WHERE id = ?", (session_id,))
+            if not cursor.fetchone():
+                conn.execute(
+                    "INSERT INTO sessions (id, title, updated_at) VALUES (?, ?, ?)",
+                    (session_id, "Recovered Chat", datetime.now())
+                )
+
             # Add message
             conn.execute(
                 """
