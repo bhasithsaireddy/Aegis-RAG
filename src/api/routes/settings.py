@@ -19,6 +19,7 @@ class SettingsResponse(BaseModel):
     top_k_results: int
     use_reranker: bool
     use_hybrid_search: bool
+    deployment_mode: str
 
 
 class SettingsUpdateRequest(BaseModel):
@@ -48,6 +49,7 @@ async def get_settings():
         top_k_results=config.TOP_K_RESULTS,
         use_reranker=config.USE_RERANKER,
         use_hybrid_search=config.USE_HYBRID_SEARCH,
+        deployment_mode=config.DEPLOYMENT_MODE,
     )
 
 

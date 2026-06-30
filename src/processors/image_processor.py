@@ -51,18 +51,13 @@ class ImageProcessor(BaseProcessor):
         self._ollama = None
     
     def _get_ocr(self):
-        """Lazy load OCR engine (Gemini for cloud, DeepSeek for local)"""
+        """Lazy load OCR engine (DeepSeek)"""
         if self._ocr is None and self.use_ocr:
             try:
-                if config.DEPLOYMENT_MODE == "cloud":
-                    from ..ocr.gemini_ocr import GeminiOCR
-                    self._ocr = GeminiOCR()
-                else:
-                    from ..ocr import DeepSeekOCR
-                    self._ocr = DeepSeekOCR()
-                    
+                from ..ocr import DeepSeekOCR
+                self._ocr = DeepSeekOCR()
                 if not self._ocr.is_available():
-                    logger.warning("OCR model not found, OCR disabled")
+                    logger.warning("DeepSeek model not found, OCR disabled")
                     self._ocr = None
             except ImportError:
                 logger.warning("OCR module not available")

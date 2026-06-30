@@ -111,12 +111,13 @@ export default function SettingsView() {
                     </section>
 
                     {/* ── Ollama Connection ── */}
-                    <section className="card p-6">
-                        <div className="flex items-center gap-3 mb-6">
-                            <Cpu size={20} className="text-aegis-rag-text-secondary" />
-                            <h2 className="font-semibold text-aegis-rag-text-primary">Ollama Connection</h2>
+                    {backendSettings?.deployment_mode !== 'cloud' && (
+                    <div className="bg-aegis-rag-bg-tertiary border border-aegis-rag-border rounded-xl p-6">
+                        <div className="flex items-center gap-3 mb-4">
+                            <Server size={20} className="text-aegis-rag-text-secondary" />
+                            <h2 className="text-lg font-medium text-aegis-rag-text-primary">Ollama Connection</h2>
                         </div>
-
+                        
                         <div className="space-y-4">
                             <div>
                                 <label className="block text-sm font-medium text-aegis-rag-text-secondary mb-1">
@@ -127,14 +128,23 @@ export default function SettingsView() {
                                     value={backendSettings?.ollama_host ?? ''}
                                     onChange={e => patch('ollama_host', e.target.value)}
                                     placeholder="http://localhost:11434"
-                                    className="input"
                                     disabled={!backendSettings}
+                                    className="w-full bg-aegis-rag-bg-primary border border-aegis-rag-border rounded-lg px-4 py-2.5 text-aegis-rag-text-primary focus:outline-none focus:border-aegis-rag-accent focus:ring-1 focus:ring-aegis-rag-accent/50 transition-all disabled:opacity-50"
                                 />
-                                <p className="text-xs text-aegis-rag-text-muted mt-1">
-                                    URL where your local Ollama instance is running
-                                </p>
+                                <p className="text-xs text-aegis-rag-text-secondary mt-1">URL where your local Ollama instance is running</p>
                             </div>
+                        </div>
+                    </div>
+                    )}
 
+                    {/* ── Models ── */}
+                    <section className="card p-6">
+                        <div className="flex items-center gap-3 mb-6">
+                            <Cpu size={20} className="text-aegis-rag-text-secondary" />
+                            <h2 className="font-semibold text-aegis-rag-text-primary">Models</h2>
+                        </div>
+
+                        <div className="space-y-4">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label className="block text-sm font-medium text-aegis-rag-text-secondary mb-1">
@@ -149,6 +159,7 @@ export default function SettingsView() {
                                         disabled={!backendSettings}
                                     />
                                 </div>
+                                {backendSettings?.deployment_mode !== 'cloud' && (
                                 <div>
                                     <label className="block text-sm font-medium text-aegis-rag-text-secondary mb-1">
                                         Vision Model
@@ -158,10 +169,12 @@ export default function SettingsView() {
                                         value={backendSettings?.vision_model ?? ''}
                                         onChange={e => patch('vision_model', e.target.value)}
                                         placeholder="llava"
-                                        className="input"
                                         disabled={!backendSettings}
+                                        className="w-full bg-aegis-rag-bg-primary border border-aegis-rag-border rounded-lg px-4 py-2.5 text-aegis-rag-text-primary focus:outline-none focus:border-aegis-rag-accent focus:ring-1 focus:ring-aegis-rag-accent/50 transition-all disabled:opacity-50"
                                     />
+                                    <p className="text-xs text-aegis-rag-text-secondary mt-1">Model used for Image OCR</p>
                                 </div>
+                                )}
                             </div>
                         </div>
                     </section>
