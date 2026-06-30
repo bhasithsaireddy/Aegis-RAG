@@ -17,6 +17,9 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /app
 
+# Create user for Hugging Face Spaces
+RUN useradd -m -u 1000 user
+
 # Install Python dependencies (cloud version)
 COPY requirements-cloud.txt .
 RUN pip install --no-cache-dir -r requirements-cloud.txt
@@ -34,8 +37,13 @@ ENV PORT=7860
 # This creates a data directory inside the container for ephemeral storage
 ENV DATA_DIR=/app/data
 
-# Create necessary directories
-RUN mkdir -p /app/data/uploads /app/data/chroma_db
+# Create necessary directories and set ownership for user 1000
+RUN mkdir -p /app/data/uploads /app/data/chroma_db && \
+    chown -R user:user /app
+
+# Switch to the non-root user required by HF Spaces
+USER user
+ENV PATH="/home/user/.local/bin:$PATH"
 
 # Expose port required by HF Spaces
 EXPOSE 7860
