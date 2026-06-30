@@ -36,8 +36,8 @@ def get_llm():
     if _llm is None:
         from .config import config
         if config.DEPLOYMENT_MODE == "cloud":
-            from .generation.llm_cloud import HFInferenceLLM
-            _llm = HFInferenceLLM()
+            from .generation.llm_cloud import GroqLLM
+            _llm = GroqLLM()
         else:
             from .generation.llm import LLM
             _llm = LLM()

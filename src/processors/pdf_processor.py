@@ -60,13 +60,18 @@ class PDFProcessor(BaseProcessor):
         self._ocr = None
     
     def _get_ocr(self):
-        """Lazy load OCR engine"""
+        """Lazy load OCR engine (Gemini for cloud, DeepSeek for local)"""
         if self._ocr is None and self.use_ocr:
             try:
-                from ..ocr import DeepSeekOCR
-                self._ocr = DeepSeekOCR()
+                if config.DEPLOYMENT_MODE == "cloud":
+                    from ..ocr.gemini_ocr import GeminiOCR
+                    self._ocr = GeminiOCR()
+                else:
+                    from ..ocr import DeepSeekOCR
+                    self._ocr = DeepSeekOCR()
+                    
                 if not self._ocr.is_available():
-                    logger.warning(f"DeepSeek model not found, OCR disabled")
+                    logger.warning("OCR model not found, OCR disabled")
                     self._ocr = None
             except ImportError as e:
                 logger.warning(f"OCR not available: {e}")
