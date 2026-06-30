@@ -1,3 +1,13 @@
+---
+title: Aegis RAG
+emoji: 🛡️
+colorFrom: blue
+colorTo: purple
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # 🛡️ Aegis — Intelligent Multimodal RAG System
 
 Aegis is a production-grade, privacy-first **Retrieval-Augmented Generation (RAG)** system that transforms your unstructured documents — PDFs, Word files, spreadsheets, images, and audio recordings — into a searchable, conversational knowledge base. Ask questions in natural language and receive accurate, source-cited answers grounded entirely in your own data.
